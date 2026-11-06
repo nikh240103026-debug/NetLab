@@ -1,0 +1,106 @@
+NETLAB SETUP
+============
+
+WHAT YOU NEED
+- Node.js 20 LTS or newer (minimum 18.17). It includes npm. Download: https://nodejs.org
+- An internet connection, because npm packages and Google Fonts are downloaded.
+- A Gemini API key, used only by the Ask AI page: https://aistudio.google.com/app/apikey
+
+Check your versions:
+
+    node -v
+    npm -v
+
+
+STEP 1: OPEN THE PROJECT FOLDER
+Unzip netlab.zip, then open a terminal in the folder you unzipped it to and run:
+
+    cd netlab
+
+
+STEP 2: INSTALL THE PACKAGES
+
+    npm install
+
+
+STEP 3: CREATE THE ENV FILE
+Run the one line that matches your terminal.
+
+Windows PowerShell:
+
+    Copy-Item .env.example .env.local
+
+Windows Command Prompt:
+
+    copy .env.example .env.local
+
+macOS or Linux:
+
+    cp .env.example .env.local
+
+
+STEP 4: FILL IN .env.local
+Generate a random secret for logins:
+
+    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+Open .env.local in a text editor and set these three lines:
+
+    AUTH_SECRET=the value printed by the command above
+    GEMINI_API_KEY=your key from Google AI Studio
+    GEMINI_MODEL=a Gemini model name, for example gemini-2.5-flash
+
+Model names change over time. Current names: https://ai.google.dev/gemini-api/docs/models
+Login and register need AUTH_SECRET. Ask AI needs both Gemini values.
+Keep .env.local private. Do not share it or upload it.
+
+
+STEP 5: START THE APP
+
+    npm run dev
+
+Open http://localhost:3000 and create an account on the Register page.
+Accounts are saved in data/users.json, which is created on the first sign-up.
+
+
+STEP 6: CHECK THE PROJECT COMPILES
+This code has not been compiled or run yet, so this is its first real test.
+Stop the dev server with Ctrl+C, then run:
+
+    npm run build
+
+If it reports errors, copy them back to Claude to get them fixed.
+
+
+RUN THE PRODUCTION BUILD (OPTIONAL)
+After npm run build succeeds:
+
+    npm start
+
+
+VIDEOS (OPTIONAL)
+The 53 video prompt files are already in public/videos.
+Each video goes next to its prompt file with the same base name, for example:
+
+    public/videos/ch06-transport/ch06-tcp-three-way-handshake.mp4
+
+No code change is needed. To refresh the Status column in public/videos/VIDEO_INDEX.md, run:
+
+    node scripts/generate-video-prompts.mjs
+
+Videos added after npm run build need another build before npm start serves them.
+
+
+COMMON PROBLEMS
+- "AUTH_SECRET is not set": .env.local is missing or empty. Fix it, then restart npm run dev.
+- "GEMINI_API_KEY is not set" or "GEMINI_MODEL is not set": same fix as above.
+- PowerShell says running scripts is disabled: use Windows Command Prompt instead.
+- Port 3000 is already in use: run this instead of npm run dev:
+
+    npm run dev -- -p 3001
+
+
+PACKAGES (npm install adds all of these from package.json, so do not install them one by one)
+Runtime: next, react, react-dom, bcryptjs, jose, @google/generative-ai, mermaid, react-markdown,
+remark-gfm, recharts, lucide-react
+Development: typescript, @types/node, @types/react, @types/react-dom, tailwindcss, postcss, autoprefixer
